@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -28,6 +29,14 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Phone, Mail, Clock, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
+
+function formatUSPhone(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  if (digits.length === 0) return "";
+  if (digits.length < 4) return `(${digits}`;
+  if (digits.length < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
 
 export function FAQ() {
   const faqs = [
@@ -115,6 +124,7 @@ const formSchema = z.object({
 
 export function Contact() {
   const { toast } = useToast();
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -126,15 +136,47 @@ export function Contact() {
       details: "",
     },
   });
+  const { isSubmitting } = form.formState;
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-      title: "Success!",
-      description: "Thanks! Joe will be in touch within 24 hours.",
-      className: "bg-[#2d6a4f] text-white border-none",
-    });
-    form.reset();
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setSubmitError(null);
+
+    const messageParts = [
+      values.location ? `Location: ${values.location}` : null,
+      values.details || null,
+    ].filter(Boolean);
+
+    try {
+      const response = await fetch(
+        "https://n8n-stripe.localpackmonster.com/webhook-test/form-submission",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: values.name,
+            phone: values.phone,
+            email: values.email,
+            service: values.flooringType,
+            message: messageParts.join("\n\n"),
+          }),
+        },
+      );
+
+      const result: { success: "true" | "false" } = await response.json();
+
+      if (result.success !== "true") {
+        throw new Error("Failed to send message");
+      }
+
+      toast({
+        title: "Success!",
+        description: "Thanks! Joe will be in touch within 24 hours.",
+        className: "bg-[#2d6a4f] text-white border-none",
+      });
+      form.reset();
+    } catch {
+      setSubmitError("Something went wrong. Please try again or call us.");
+    }
   }
 
   return (
@@ -258,7 +300,6 @@ export function Contact() {
                           <FormControl>
                             <Input
                               placeholder="(801) 555-0000"
-                              type="tel"
                               inputMode="tel"
                               className="bg-gray-50 border-gray-200 focus:border-[#b08968] focus:ring-[#b08968] py-6"
                               {...field}
@@ -326,7 +367,7 @@ export function Contact() {
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
                         >
                           <FormControl>
                             <SelectTrigger className="bg-gray-50 border-gray-200 focus:border-[#b08968] focus:ring-[#b08968] py-6">
@@ -379,11 +420,20 @@ export function Contact() {
                     )}
                   />
 
+                  {submitError && (
+                    <p className="text-red-500 text-sm">{submitError}</p>
+                  )}
+
                   <Button
                     type="submit"
-                    className="w-full bg-[#b08968] hover:bg-[#9a7653] text-white py-4 text-lg font-bold rounded-xl shadow-lg mt-4"
+                    disabled={isSubmitting}
+                    className="w-full bg-[#b08968] hover:bg-[#9a7653] text-white py-4 text-lg font-bold rounded-xl shadow-lg mt-4 disabled:opacity-70"
                   >
-                    Request My Free Estimate
+                    {isSubmitting ? (
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      "Request My Free Estimate"
+                    )}
                   </Button>
                 </form>
               </Form>
