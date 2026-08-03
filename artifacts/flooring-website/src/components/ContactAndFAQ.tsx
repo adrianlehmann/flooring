@@ -88,9 +88,25 @@ export function FAQ() {
   );
 }
 
+function formatUSPhone(value: string, isDeleting = false): string {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  if (digits.length === 0) return "";
+  if (digits.length < 3) return `(${digits}`;
+  if (digits.length === 3) return isDeleting ? `(${digits}` : `(${digits}) `;
+  if (digits.length < 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  if (digits.length === 6) {
+    return isDeleting
+      ? `(${digits.slice(0, 3)}) ${digits.slice(3)}`
+      : `(${digits.slice(0, 3)}) ${digits.slice(3)}-`;
+  }
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
-  phone: z.string().min(10, "Valid phone number is required"),
+  phone: z
+    .string()
+    .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Enter a valid 10-digit US phone number"),
   email: z.string().email("Valid email is required"),
   location: z.string().optional(),
   flooringType: z.string().min(1, "Please select a flooring type"),
@@ -242,8 +258,15 @@ export function Contact() {
                           <FormControl>
                             <Input
                               placeholder="(801) 555-0000"
+                              type="tel"
+                              inputMode="tel"
                               className="bg-gray-50 border-gray-200 focus:border-[#b08968] focus:ring-[#b08968] py-6"
                               {...field}
+                              onChange={(e) => {
+                                const next = e.target.value;
+                                const isDeleting = next.length < field.value.length;
+                                field.onChange(formatUSPhone(next, isDeleting));
+                              }}
                             />
                           </FormControl>
                           <FormMessage />
