@@ -14,19 +14,19 @@ export function Services() {
     {
       title: "Hardwood Floor Installation",
       desc: "Professional installation of engineered and traditional hardwood flooring with precision craftsmanship.",
-      img: "/service-hardwood.png",
+      img: "/service-hardwood.avif",
       icon: Layers,
     },
     {
       title: "Laminate Flooring Installation",
       desc: "Durable, attractive laminate flooring installed with careful preparation and expert attention to detail.",
-      img: "/service-laminate.png",
+      img: "/service-laminate.avif",
       icon: BoxSelect,
     },
     {
       title: "Luxury Vinyl Plank (LVP)",
       desc: "Modern waterproof flooring solutions ideal for busy homes and commercial spaces.",
-      img: "/service-lvp.png",
+      img: "/service-lvp.avif",
       icon: Layers,
     },
   ];

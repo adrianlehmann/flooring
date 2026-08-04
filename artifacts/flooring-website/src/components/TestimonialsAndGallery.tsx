@@ -84,10 +84,10 @@ export function Testimonials() {
 
 export function Gallery() {
   const images = [
-    { src: "/gallery-1.png", title: "Modern Dark Oak", type: "Hardwood", style: "col-span-1 row-span-1 aspect-square" },
-    { src: "/gallery-2.png", title: "Elegant Hallway", type: "LVP", style: "col-span-1 row-span-2 aspect-[3/4]" },
-    { src: "/gallery-4.png", title: "Rustic Living Space", type: "Laminate", style: "col-span-1 row-span-2 aspect-[3/4]" },
-    { src: "/gallery-3.png", title: "Light Scandinavian", type: "Hardwood", style: "col-span-1 row-span-1 aspect-square" },
+    { src: "/gallery-1.avif", title: "Modern Dark Oak", type: "Hardwood", style: "col-span-1 row-span-1 aspect-square" },
+    { src: "/gallery-2.avif", title: "Elegant Hallway", type: "LVP", style: "col-span-1 row-span-2 aspect-[3/4]" },
+    { src: "/gallery-4.avif", title: "Rustic Living Space", type: "Laminate", style: "col-span-1 row-span-2 aspect-[3/4]" },
+    { src: "/gallery-3.avif", title: "Light Scandinavian", type: "Hardwood", style: "col-span-1 row-span-1 aspect-square" },
   ];
 
   return (
