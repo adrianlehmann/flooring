@@ -6,7 +6,6 @@ import {
   MessageSquare,
   MapPin,
   Star,
-  User,
 } from "lucide-react";
 
 export function About() {
@@ -58,7 +57,13 @@ export function About() {
                 <div
                   className="bg-gray-100 rounded-3xl overflow-hidden relative shadow-xl"
                   style={{ width: "300px", height: "300px" }}
-                ></div>
+                >
+                  <img
+                    src="/owner-portrait.jpg"
+                    alt="Joe, owner of 3 Monkeys Floor Installation"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 <div className="absolute -bottom-5 -right-10 bg-[#2d6a4f] p-4 rounded-xl shadow-xl">
                   <div className="text-white text-center">
                     <span className="block text-2xl font-black font-heading mb-0.5">
