@@ -30,14 +30,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Phone, Mail, Clock, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 
-function formatUSPhone(value: string): string {
-  const digits = value.replace(/\D/g, "").slice(0, 10);
-  if (digits.length === 0) return "";
-  if (digits.length < 4) return `(${digits}`;
-  if (digits.length < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-}
-
 export function FAQ() {
   const faqs = [
     {
@@ -95,6 +87,20 @@ export function FAQ() {
       </div>
     </section>
   );
+}
+
+function formatUSPhone(value: string, isDeleting = false): string {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  if (digits.length === 0) return "";
+  if (digits.length < 3) return `(${digits}`;
+  if (digits.length === 3) return isDeleting ? `(${digits}` : `(${digits}) `;
+  if (digits.length < 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  if (digits.length === 6) {
+    return isDeleting
+      ? `(${digits.slice(0, 3)}) ${digits.slice(3)}`
+      : `(${digits.slice(0, 3)}) ${digits.slice(3)}-`;
+  }
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
 }
 
 const formSchema = z.object({
@@ -283,11 +289,14 @@ export function Contact() {
                           <FormControl>
                             <Input
                               placeholder="(801) 555-0000"
+                              type="tel"
                               inputMode="tel"
                               className="bg-gray-50 border-gray-200 focus:border-[#b08968] focus:ring-[#b08968] py-6"
                               {...field}
                               onChange={(e) => {
-                                field.onChange(formatUSPhone(e.target.value));
+                                const next = e.target.value;
+                                const isDeleting = next.length < field.value.length;
+                                field.onChange(formatUSPhone(next, isDeleting));
                               }}
                             />
                           </FormControl>
