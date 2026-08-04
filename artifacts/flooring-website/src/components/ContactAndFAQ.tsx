@@ -102,8 +102,11 @@ const formSchema = z.object({
   phone: z
     .string()
     .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Enter a valid 10-digit US phone number"),
-  email: z.string().email("Valid email is required"),
-  location: z.string().optional(),
+  email: z
+    .string()
+    .email("Enter a valid email address")
+    .optional()
+    .or(z.literal("")),
   flooringType: z.string().min(1, "Please select a flooring type"),
   details: z.string().optional(),
 });
@@ -117,7 +120,6 @@ export function Contact() {
       name: "",
       phone: "",
       email: "",
-      location: "",
       flooringType: "",
       details: "",
     },
@@ -126,11 +128,6 @@ export function Contact() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setSubmitError(null);
-
-    const messageParts = [
-      values.location ? `Location: ${values.location}` : null,
-      values.details || null,
-    ].filter(Boolean);
 
     try {
       const response = await fetch(
@@ -141,9 +138,9 @@ export function Contact() {
           body: JSON.stringify({
             name: values.name,
             phone: values.phone,
-            email: values.email,
+            email: values.email || "",
             service: values.flooringType,
-            message: messageParts.join("\n\n"),
+            message: values.details || "",
           }),
         },
       );
@@ -300,46 +297,25 @@ export function Contact() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[#1f2937] font-semibold">
-                            Email Address *
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="john@example.com"
-                              className="bg-gray-50 border-gray-200 focus:border-[#b08968] focus:ring-[#b08968] py-6"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="location"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[#1f2937] font-semibold">
-                            Project City
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="South Jordan, Sandy, etc."
-                              className="bg-gray-50 border-gray-200 focus:border-[#b08968] focus:ring-[#b08968] py-6"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[#1f2937] font-semibold">
+                          Email Address
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="john@example.com"
+                            className="bg-gray-50 border-gray-200 focus:border-[#b08968] focus:ring-[#b08968] py-6"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
                   <FormField
                     control={form.control}
