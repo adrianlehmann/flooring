@@ -27,15 +27,28 @@ export default function Home() {
 
       <Footer />
 
-      <div className="fixed bottom-6 right-6 z-40 md:hidden">
-        <a
-          href="tel:8015550123"
-          className="flex items-center justify-center w-14 h-14 bg-[#b08968] text-white rounded-full shadow-lg shadow-[#b08968]/40 transition-colors"
-          aria-label="Call Now"
-        >
-          <Phone size={24} />
-        </a>
-      </div>
+      <a
+        href="tel:8015550123"
+        className="fixed bottom-6 right-6 z-50 bg-[#b08968] text-white rounded-full py-4 px-6 shadow-2xl flex items-center gap-2 font-bold hover:bg-[#9a7653] transition-transform hover:scale-105 active:scale-95 animate-bounce-short"
+        aria-label="Call Now"
+      >
+        <Phone className="w-5 h-5" />
+        <span className="hidden md:inline">Call Now: </span>(801) 555-0123
+      </a>
+
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        @keyframes bounce-short {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+        }
+        .animate-bounce-short {
+          animation: bounce-short 3s ease-in-out infinite;
+        }
+      `,
+        }}
+      />
     </div>
   );
 }
