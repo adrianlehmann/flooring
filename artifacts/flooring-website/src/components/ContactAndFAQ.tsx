@@ -18,13 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Phone, Mail, Clock, ShieldCheck } from "lucide-react";
@@ -334,36 +327,26 @@ export function Contact() {
                         <FormLabel className="text-[#1f2937] font-semibold">
                           Primary Service Needed *
                         </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="bg-gray-50 border-gray-200 focus:border-[#b08968] focus:ring-[#b08968] py-6">
-                              <SelectValue placeholder="Select flooring type..." />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="Hardwood">
+                        <FormControl>
+                          <select
+                            {...field}
+                            className="flex h-12 w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm shadow-sm transition-colors focus:border-[#b08968] focus:outline-none focus:ring-1 focus:ring-[#b08968] appearance-none"
+                          >
+                            <option value="">Select flooring type...</option>
+                            <option value="Hardwood">
                               Hardwood Installation
-                            </SelectItem>
-                            <SelectItem value="Laminate">
+                            </option>
+                            <option value="Laminate">
                               Laminate Installation
-                            </SelectItem>
-                            <SelectItem value="LVP">
+                            </option>
+                            <option value="LVP">
                               Luxury Vinyl Plank (LVP)
-                            </SelectItem>
-                            <SelectItem value="Baseboards">
-                              Baseboards Only
-                            </SelectItem>
-                            <SelectItem value="Removal">
-                              Removal/Prep Only
-                            </SelectItem>
-                            <SelectItem value="Other">
-                              Other / Not Sure Yet
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
+                            </option>
+                            <option value="Baseboards">Baseboards Only</option>
+                            <option value="Removal">Removal/Prep Only</option>
+                            <option value="Other">Other / Not Sure Yet</option>
+                          </select>
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
